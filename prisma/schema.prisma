@@ -1,0 +1,135 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider  = "postgresql"
+    url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+    directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model User {
+    id            String      @id @default(cuid())
+    name          String?
+    email         String      @unique
+    password      String?
+    emailVerified DateTime?   @map("email_verified")
+    image         String?
+    role          String      @default("user")
+    phone         String?
+    accounts      Account[]
+    sessions      Session[]
+    Transaksi     Transaksi[]
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("tb_user")
+}
+
+model Account {
+    id                String   @id @default(cuid())
+    userId            String   @map("user_id")
+    type              String
+    provider          String
+    providerAccountId String   @map("provider_account_id")
+    refresh_token     String?
+    access_token      String?
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String?
+    session_state     String?
+    createdAt         DateTime @default(now()) @map("created_at")
+    updatedAt         DateTime @updatedAt @map("updated_at")
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+    @@map("tb_account")
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique @map("session_token")
+    userId       String   @map("user_id")
+    expires      DateTime
+    createdAt    DateTime @default(now()) @map("created_at")
+    updatedAt    DateTime @updatedAt @map("updated_at")
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("tb_session")
+}
+
+model VerificationToken {
+    identifier String   @unique
+    token      String   @unique
+    expires    DateTime
+
+    @@map("tb_verification_token")
+}
+
+model PasswordResetToken {
+    id         String   @id @default(cuid())
+    identifier String   @unique
+    token      String   @unique
+    expires    DateTime
+
+    @@map("tb_password_reset_token")
+}
+
+// barbershop
+model Barberman {
+    id     String  @id @default(cuid())
+    name   String
+    image  String?
+    status String? @default("online")
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("tb_barberman")
+}
+
+model Gallery {
+    id          String   @id @default(cuid())
+    description String?
+    image       String
+    createdAt   DateTime @default(now()) @map("created_at")
+    updatedAt   DateTime @updatedAt @map("updated_at")
+
+    @@map("tb_gallery")
+}
+
+model Paket {
+    id        String      @id @default(cuid())
+    name      String
+    price     Int
+    createdAt DateTime    @default(now()) @map("created_at")
+    updatedAt DateTime    @updatedAt @map("updated_at")
+    Transaksi Transaksi[]
+
+    @@map("tb_paket")
+}
+
+model Transaksi {
+    id            String   @id @default(cuid())
+    userId        String   @map("user_id")
+    paketId       String   @map("paket_id")
+    namaBarberman String?
+    invoice       String   @unique
+    snapToken     String?  @map("snap_token")
+    snapUrl       String?
+    via           String?
+    total         Int?
+    noAntrian     String?
+    status        String?  @default("pending")
+    createdAt     DateTime @default(now()) @map("created_at")
+    updatedAt     DateTime @updatedAt @map("updated_at")
+
+    user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+    paket Paket @relation(fields: [paketId], references: [id], onDelete: Cascade)
+
+    @@map("tb_transaksi")
+}
