@@ -1,7 +1,11 @@
 import React from "react";
 
-function Page() {
-    return <div>Page Admin</div>;
+import { getAllAntrianToday } from "@/actions/antrian-actions";
+import PageAntrian from "./page-antrian";
+
+async function Page() {
+    const antrian = await getAllAntrianToday();
+    return <PageAntrian antrian={antrian} />;
 }
 
 export default Page;

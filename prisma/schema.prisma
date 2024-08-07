@@ -114,19 +114,20 @@ model Paket {
 }
 
 model Transaksi {
-    id            String   @id @default(cuid())
-    userId        String   @map("user_id")
-    paketId       String   @map("paket_id")
-    namaBarberman String?
-    invoice       String   @unique
-    snapToken     String?  @map("snap_token")
-    snapUrl       String?
-    via           String?
-    total         Int?
-    noAntrian     String?
-    status        String?  @default("pending")
-    createdAt     DateTime @default(now()) @map("created_at")
-    updatedAt     DateTime @updatedAt @map("updated_at")
+    id              String   @id @default(cuid())
+    userId          String   @map("user_id")
+    paketId         String   @map("paket_id")
+    namaBarberman   String?
+    invoice         String   @unique
+    snapToken       String?  @map("snap_token")
+    snapUrl         String?
+    via             String?
+    total           Int?
+    noAntrian       String?
+    status          String?  @default("pending")
+    isActiveAntrian Boolean? @default(false)
+    createdAt       DateTime @default(now()) @map("created_at")
+    updatedAt       DateTime @updatedAt @map("updated_at")
 
     user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
     paket Paket @relation(fields: [paketId], references: [id], onDelete: Cascade)

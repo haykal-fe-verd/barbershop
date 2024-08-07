@@ -41,6 +41,7 @@ export const insertTransaction = async (data: z.infer<typeof transaksiSchema>, i
                 snapToken: response.token as string,
                 snapUrl: response.redirect_url as string,
                 noAntrian: queueNumber,
+                total: paket?.price,
             },
         });
 
@@ -82,6 +83,39 @@ export const updateTransaction = async (data: any) => {
             data: null,
             message: "Transaksi berhasil dilakukan!",
         };
+    } catch (error) {
+        throw new Error("Terjadi kesalahan!");
+    }
+};
+
+export const getTransactions = async (fromDate: Date, toDate: Date) => {
+    try {
+        const session = await auth();
+        if (!session?.user) return null;
+
+        const transactions = await prisma.transaksi.findMany({
+            where: {
+                AND: [
+                    { updatedAt: { gte: new Date(fromDate) } },
+                    { updatedAt: { lte: new Date(toDate) } },
+                    { status: "settlement" },
+                ],
+            },
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                    },
+                },
+                paket: {
+                    select: {
+                        name: true,
+                    },
+                },
+            },
+        });
+
+        return transactions;
     } catch (error) {
         throw new Error("Terjadi kesalahan!");
     }

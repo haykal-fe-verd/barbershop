@@ -79,3 +79,17 @@
         scrollbar-width: none; /* Firefox */
     }
 }
+
+@media print {
+    @page {
+        size: A4;
+    }
+
+    body {
+        margin: 1cm;
+    }
+
+    table {
+        border-radius: 0 !important;
+    }
+}
