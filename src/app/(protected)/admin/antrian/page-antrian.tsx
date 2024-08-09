@@ -34,8 +34,12 @@ function PageAntrian({ antrian }: PageAntrianProps) {
     const findActiveAntrian = React.useMemo(() => antrian.find((item) => item.isActiveAntrian), [antrian]);
 
     const handleMulaiAntrian = async () => {
-        const id = antrian[0].id ?? "";
-        await setAntrianActive(id);
+        if (antrian.length <= 0) {
+            toast("Belum ada antrian yang tersedia!");
+        } else {
+            const id = antrian[0]?.id ?? "";
+            await setAntrianActive(id);
+        }
     };
 
     const handleNextAntrian = async () => {

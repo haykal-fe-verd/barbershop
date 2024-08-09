@@ -1,22 +1,46 @@
-import { insertTransaction } from "@/actions/transaction-actions";
-import Header from "@/components/header";
-import { currencyFormatter } from "@/lib/utils";
 import React from "react";
 
-function Page() {
-    const harga = 1500000;
-    const hargaTerformat = currencyFormatter(harga);
+import { auth } from "@/auth";
+import {
+    getAntrianBerjalanSekarang,
+    getCountTransaksiSaya,
+    getTigaPaket,
+    getTotalAdmin,
+    getTotalBarberman,
+    getTotalPaket,
+    getTotalTransaksi,
+} from "@/actions/dashboard-actions";
+import PageDashboardAdmin from "./page-dashboard-admin";
+import PageDashboardUser from "./page-dashboard-user";
 
-    return (
-        <div className="items-center justify-center">
-            <Header title="Dashboard" />
-            <div>Page dashboard</div>
-            <div>{hargaTerformat}</div>
-            <form action={insertTransaction}>
-                <input type="text" />
-                <button type="submit">Submit</button>
-            </form>
-        </div>
+async function Page() {
+    // hooks
+    const session = await auth();
+    const role = session?.user?.role;
+
+    if (!session) {
+        return null;
+    }
+
+    // get data
+    const antrianSekarang = await getAntrianBerjalanSekarang();
+    const totalTransaksi = await getTotalTransaksi();
+    const totalAdmin = await getTotalAdmin();
+    const totalBarberman = await getTotalBarberman();
+    const totalPaket = await getTotalPaket();
+    const totalTransaksiSaya = await getCountTransaksiSaya();
+    const paket = await getTigaPaket();
+
+    return role === "admin" ? (
+        <PageDashboardAdmin
+            antrianSekarang={antrianSekarang}
+            totalTransaksi={totalTransaksi}
+            totalAdmin={totalAdmin}
+            totalBarberman={totalBarberman}
+            totalPaket={totalPaket}
+        />
+    ) : (
+        <PageDashboardUser totalTransaksiSaya={totalTransaksiSaya} antrianSekarang={antrianSekarang} paket={paket} />
     );
 }
 

@@ -71,3 +71,79 @@ export const setAntrianInactive = async (id: string) => {
         throw new Error("Terjadi kesalahan!");
     }
 };
+
+export const getTransaksi = async (query: string, take: number, currentPage: number) => {
+    const offset = (currentPage - 1) * take;
+
+    try {
+        const transaksi = await prisma.transaksi.findMany({
+            where: {
+                OR: [
+                    { noAntrian: { contains: query, mode: "insensitive" } },
+                    { user: { name: { contains: query, mode: "insensitive" } } },
+                    { paket: { name: { contains: query, mode: "insensitive" } } },
+                    { invoice: { contains: query, mode: "insensitive" } },
+                    { via: { contains: query, mode: "insensitive" } },
+                    { status: { contains: query, mode: "insensitive" } },
+                ],
+            },
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                    },
+                },
+                paket: {
+                    select: {
+                        name: true,
+                    },
+                },
+            },
+            orderBy: { createdAt: "desc" },
+            skip: offset ?? 0,
+            take: take ?? 8,
+        });
+        return transaksi;
+    } catch (error) {
+        throw new Error("Terjadi kesalahan!");
+    }
+};
+
+export const getTransaksiPages = async (query: string, take: number) => {
+    try {
+        const transaksi = await prisma.transaksi.count({
+            where: {
+                OR: [
+                    { noAntrian: { contains: query, mode: "insensitive" } },
+                    { user: { name: { contains: query, mode: "insensitive" } } },
+                    { paket: { name: { contains: query, mode: "insensitive" } } },
+                    { invoice: { contains: query, mode: "insensitive" } },
+                    { via: { contains: query, mode: "insensitive" } },
+                    { status: { contains: query, mode: "insensitive" } },
+                ],
+            },
+        });
+        const totalPages = Math.ceil(Number(transaksi) / take);
+        return totalPages;
+    } catch (error) {
+        throw new Error("Terjadi kesalahan!");
+    }
+};
+
+export const updateTransaksiStatus = async (id: string, status: string) => {
+    try {
+        await prisma.transaksi.update({
+            where: {
+                id,
+            },
+            data: {
+                status,
+            },
+        });
+
+        revalidatePath("/admin/transaksi");
+        return { message: "Status berhasil diubah!" };
+    } catch (error) {
+        throw new Error("Terjadi kesalahan!");
+    }
+};

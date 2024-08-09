@@ -184,6 +184,12 @@ export const updateUserSchema = z
 
 export const transaksiSchema = z.object({
     barberman: z.string().min(1, { message: "Barberman wajib diisi" }),
+    via: z.string().min(1, { message: "Via wajib diisi" }),
+});
+
+export const updateStatusTransaksiSchema = z.object({
+    status: z.string().min(1, { message: "Status wajib diisi" }),
+    id: z.string().min(1, { message: "ID wajib diisi" }),
 });
 
 //   image: z

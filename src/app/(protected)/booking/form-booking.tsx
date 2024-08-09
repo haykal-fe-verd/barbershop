@@ -41,30 +41,40 @@ function FormBooking({ setOpenModal, barberman, dataPaket, antrian }: FormBookin
 
     // states
     const [selectedBarberman, setSelectedBarberman] = React.useState<string>("");
+    const [selectVia, setSelectVia] = React.useState<string>("");
 
     // events
     const onSubmit = async (values: z.infer<typeof transaksiSchema>) => {
-        const response = await insertTransaction(values, dataPaket.id);
-        window.snap.pay(response?.data.token, {
-            async onSuccess(result: any) {
-                await updateTransaction(result);
-                toast("Transaksi berhasil dilakukan!");
-                router.push("/success");
-            },
-            async onPending(result: any) {
-                await updateTransaction(result);
-                toast("Transaksi berhasil dilakukan!");
-                router.push("/riwayat-transaksi");
-            },
-            async onError(result: any) {
-                await updateTransaction(result);
-                toast("Opps, terjadi kesalahan!");
-            },
-            onClose() {
-                //
-            },
-        });
+        if (selectVia === "tunai") {
+            await insertTransaction(values, dataPaket.id);
+            toast("Transaksi berhasil dilakukan!");
+            router.push("/success");
+        } else {
+            const response = await insertTransaction(values, dataPaket.id);
+            window.snap.pay(response?.data.token, {
+                async onSuccess(result: any) {
+                    await updateTransaction(result);
+                    toast("Transaksi berhasil dilakukan!");
+                    router.push("/success");
+                },
+                async onPending(result: any) {
+                    await updateTransaction(result);
+                    toast("Transaksi berhasil dilakukan!");
+                    router.push("/riwayat-transaksi");
+                },
+                async onError(result: any) {
+                    await updateTransaction(result);
+                    toast("Opps, terjadi kesalahan!");
+                },
+                onClose() {
+                    //
+                },
+            });
+        }
+
         setOpenModal(false);
+        setSelectVia("");
+        setSelectedBarberman("");
     };
 
     return (
@@ -81,48 +91,77 @@ function FormBooking({ setOpenModal, barberman, dataPaket, antrian }: FormBookin
                     <DialogDescription>Silahkan konfirmasi bookingan anda.</DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                        <FormField
-                            control={form.control}
-                            name="barberman"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <Select
-                                        onValueChange={(value) => {
-                                            field.onChange(value);
-                                            setSelectedBarberman(value);
-                                        }}
-                                        defaultValue={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger className="max-w-sm">
-                                                <SelectValue placeholder="Pilih Barberman" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            {barberman.map((item) => (
-                                                <SelectItem
-                                                    key={item.id}
-                                                    value={item.name}
-                                                    disabled={item.status !== "online"}>
-                                                    <div className="inline-flex w-full flex-row items-center gap-2">
-                                                        <div
-                                                            className={cn(
-                                                                "h-2 w-2 rounded-full",
-                                                                item.status === "online"
-                                                                    ? "bg-green-500"
-                                                                    : "bg-red-500",
-                                                            )}
-                                                        />
-                                                        {item.name}
-                                                    </div>
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
+                        <div className="grid grid-cols-2 gap-5">
+                            <FormField
+                                control={form.control}
+                                name="barberman"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <Select
+                                            onValueChange={(value) => {
+                                                field.onChange(value);
+                                                setSelectedBarberman(value);
+                                            }}
+                                            defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger className="col-span-2 md:col-span-1">
+                                                    <SelectValue placeholder="Pilih Barberman" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {barberman.map((item) => (
+                                                    <SelectItem
+                                                        key={item.id}
+                                                        value={item.name}
+                                                        disabled={item.status !== "online"}>
+                                                        <div className="inline-flex w-full flex-row items-center gap-2">
+                                                            <div
+                                                                className={cn(
+                                                                    "h-2 w-2 rounded-full",
+                                                                    item.status === "online"
+                                                                        ? "bg-green-500"
+                                                                        : "bg-red-500",
+                                                                )}
+                                                            />
+                                                            {item.name}
+                                                        </div>
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="via"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <Select
+                                            onValueChange={(value) => {
+                                                field.onChange(value);
+                                                setSelectVia(value);
+                                            }}
+                                            defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger className="col-span-2 md:col-span-1">
+                                                    <SelectValue placeholder="Pilih Via Transaksi" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="tunai">Tunai (Cash)</SelectItem>
+                                                <SelectItem value="transfer">Transfer (Online)</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
                         <table className="w-full">
                             <thead>
                                 <tr>
@@ -142,6 +181,12 @@ function FormBooking({ setOpenModal, barberman, dataPaket, antrian }: FormBookin
                                     <td className="w-full text-left">Barberman</td>
                                     <td className="w-full text-nowrap text-right font-bold">
                                         {selectedBarberman ?? "-"}
+                                    </td>
+                                </tr>
+                                <tr className="w-full">
+                                    <td className="w-full text-left">Via</td>
+                                    <td className="w-full text-nowrap text-right font-bold">
+                                        {selectVia === "tunai" ? "Tunai (Cash)" : "Transfer (Online)"}
                                     </td>
                                 </tr>
                                 <tr className="w-full">

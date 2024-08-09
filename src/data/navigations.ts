@@ -59,6 +59,11 @@ export const protectedNavigations: ProtectedNavigationType[] = [
         roles: ["admin"],
     },
     {
+        name: "Transaksi",
+        href: "/admin/transaksi",
+        roles: ["admin"],
+    },
+    {
         name: "Laporan",
         href: "/admin/laporan",
         roles: ["admin"],

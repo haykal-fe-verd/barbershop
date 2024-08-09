@@ -31,19 +31,37 @@ export const insertTransaction = async (data: z.infer<typeof transaksiSchema>, i
             },
         };
 
-        const response = await createTransaction(params);
-        await prisma.transaksi.create({
-            data: {
-                paket: { connect: { id: idPaket } },
-                user: { connect: { id: user.id } },
-                namaBarberman: data.barberman as string,
-                invoice: invoice as string,
-                snapToken: response.token as string,
-                snapUrl: response.redirect_url as string,
-                noAntrian: queueNumber,
-                total: paket?.price,
-            },
-        });
+        let response = null;
+
+        if (data.via === "transfer") {
+            response = await createTransaction(params);
+            await prisma.transaksi.create({
+                data: {
+                    paket: { connect: { id: idPaket } },
+                    user: { connect: { id: user.id } },
+                    namaBarberman: data.barberman as string,
+                    invoice: invoice as string,
+                    snapToken: response.token as string,
+                    snapUrl: response.redirect_url as string,
+                    noAntrian: queueNumber,
+                    total: paket?.price,
+                },
+            });
+        }
+
+        if (data.via === "tunai") {
+            await prisma.transaksi.create({
+                data: {
+                    paket: { connect: { id: idPaket } },
+                    user: { connect: { id: user.id } },
+                    namaBarberman: data.barberman as string,
+                    invoice: invoice as string,
+                    noAntrian: queueNumber,
+                    total: paket?.price,
+                    via: "tunai",
+                },
+            });
+        }
 
         return {
             success: true,
