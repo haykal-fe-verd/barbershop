@@ -30,7 +30,7 @@ function PerPage() {
                 name="perpage"
                 onValueChange={handlePerPageChange}
                 defaultValue={searchParams.get("take")?.toString()}>
-                <SelectTrigger className="w-20 bg-white">
+                <SelectTrigger className="w-20">
                     <SelectValue placeholder={searchParams.get("take")?.toString() || "8"} />
                 </SelectTrigger>
                 <SelectContent>

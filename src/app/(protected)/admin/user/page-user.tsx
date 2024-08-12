@@ -110,7 +110,9 @@ function PageUser({ users, totalPages }: PageUserProps) {
                                     users.map((item, index) => {
                                         const falbackAvatar = getInitial(item.name as string);
                                         return (
-                                            <TableRow key={item.id} className="odd:bg-white even:bg-muted">
+                                            <TableRow
+                                                key={item.id}
+                                                className="odd:bg-white even:bg-muted dark:odd:bg-slate-700">
                                                 <TableCell className="text-center">{index + 1}</TableCell>
                                                 <TableCell>{item.name}</TableCell>
                                                 <TableCell>{item.email}</TableCell>

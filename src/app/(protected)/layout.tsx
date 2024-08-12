@@ -10,12 +10,14 @@ interface ProtectedLayoutProps {
 
 async function ProtectedLayout({ children }: Readonly<ProtectedLayoutProps>) {
     const session = await auth();
+
     if (session?.user) {
         session.user = {
-            name: session.user.name,
-            email: session.user.email,
-            image: session.user.image,
-            role: session.user.role,
+            id: session.user.id as string,
+            name: session.user.name as string,
+            email: session.user.email as string,
+            image: session.user.image as string,
+            role: session.user.role as string,
         };
     }
 

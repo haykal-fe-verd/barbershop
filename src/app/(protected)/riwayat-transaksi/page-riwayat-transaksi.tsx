@@ -73,7 +73,9 @@ function PageRiwayatTransaksi({ totalPages, riwayatTransaksi }: PageRiwayatTrans
                                 </TableRow>
                             ) : (
                                 riwayatTransaksi.map((item, index) => (
-                                    <TableRow key={item.id} className="odd:bg-white even:bg-muted">
+                                    <TableRow
+                                        key={item.id}
+                                        className="odd:bg-white even:bg-muted dark:odd:bg-slate-700">
                                         <TableCell className="text-center">{index + 1}</TableCell>
                                         <TableCell>{format(item.createdAt, "d MMMM y", { locale: id })}</TableCell>
                                         <TableCell>{item.invoice}</TableCell>

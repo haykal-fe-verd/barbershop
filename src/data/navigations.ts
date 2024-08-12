@@ -10,11 +10,11 @@ export const guestNavigations: GuestNavigationType[] = [
     },
     {
         name: "barberman",
-        href: "/barberman",
+        href: "#barberman",
     },
     {
         name: "gallery",
-        href: "/gallery",
+        href: "#gallery",
     },
 ];
 

@@ -27,7 +27,7 @@ function Search() {
     return (
         <div className="relative w-full rounded-md md:w-1/3">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center rounded-bl-md rounded-tl-md bg-primary p-3">
-                <SearchIcon className="text-white" />
+                <SearchIcon className="text-white dark:text-slate-900" />
             </div>
             <Input
                 name="search"

@@ -82,7 +82,7 @@ function FormRegister() {
                 <div className="space-y-5">
                     <div className="flex flex-col items-center justify-center space-y-3 text-center">
                         <Link href="/" className="inline-flex items-center gap-2">
-                            <Icons.Logo className="h-20 w-20" />
+                            <Icons.Logo className="h-20 w-20 dark:fill-white" />
                         </Link>
                         <h1 className="font-bold">Barbershop</h1>
                         <p className="text-sm">Selamat datang! Silahkan mendaftar untuk melanjutkan</p>
