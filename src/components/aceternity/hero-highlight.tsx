@@ -13,12 +13,12 @@ export function HeroHighlight({
     className?: string;
     containerClassName?: string;
 }) {
-    let mouseX = useMotionValue(0);
-    let mouseY = useMotionValue(0);
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
 
     function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent<HTMLDivElement>) {
         if (!currentTarget) return;
-        let { left, top } = currentTarget.getBoundingClientRect();
+        const { left, top } = currentTarget.getBoundingClientRect();
 
         mouseX.set(clientX - left);
         mouseY.set(clientY - top);
@@ -29,7 +29,8 @@ export function HeroHighlight({
             onMouseMove={handleMouseMove}>
             <div className="bg-dot-thick-neutral-300 dark:bg-dot-thick-neutral-800 pointer-events-none absolute inset-0" />
             <motion.div
-                className="bg-dot-thick-indigo-500 dark:bg-dot-thick-indigo-500 pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100"
+                className="bg-dot-thick-indigo-500 dark:bg-dot-thick-indigo-500 pointer-events-none absolute inset-0 opacity-0 transition
+                    duration-300 group-hover:opacity-100"
                 style={{
                     WebkitMaskImage: useMotionTemplate`
             radial-gradient(
@@ -73,7 +74,8 @@ export function Highlight({ children, className }: { children: React.ReactNode; 
                 display: "inline",
             }}
             className={cn(
-                `relative inline-block rounded-lg bg-gradient-to-r from-indigo-300 to-purple-300 px-1 pb-1 dark:from-indigo-500 dark:to-purple-500`,
+                `relative inline-block rounded-lg bg-gradient-to-r from-indigo-300 to-purple-300 px-1 pb-1 dark:from-indigo-500
+                dark:to-purple-500`,
                 className,
             )}>
             {children}

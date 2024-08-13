@@ -1,6 +1,6 @@
 import { getAllPaket } from "@/actions/paket-actions";
 import { buttonVariants } from "@/components/ui/button";
-import { cn, currencyFormatter } from "@/lib/utils";
+import { currencyFormatter } from "@/lib/utils";
 import { ArrowRight, Rocket } from "lucide-react";
 import Link from "next/link";
 import {

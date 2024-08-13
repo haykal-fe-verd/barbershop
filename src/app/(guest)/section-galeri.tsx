@@ -1,3 +1,5 @@
+/* eslint-disable no-plusplus */
+
 import React from "react";
 import { getAllGallery } from "@/actions/gallery-actions";
 import { Separator } from "@/components/ui/separator";
