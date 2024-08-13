@@ -1,68 +1,54 @@
 import { getAllPaket } from "@/actions/paket-actions";
 import { buttonVariants } from "@/components/ui/button";
 import { cn, currencyFormatter } from "@/lib/utils";
-import { Bolt, Cloud, DollarSign, Eraser, Heart, HelpCircle, MoveLeft, Scissors, Terminal } from "lucide-react";
+import { ArrowRight, Rocket } from "lucide-react";
 import Link from "next/link";
-
-function Feature({
-    title,
-    description,
-    icon,
-    index,
-}: {
-    title: string;
-    description: string;
-    icon: React.ReactNode;
-    index: number;
-}) {
-    return (
-        <div
-            className={cn(
-                "group/feature relative flex flex-col py-10 dark:border-neutral-800 lg:border-r",
-                (index === 0 || index === 4) && "dark:border-neutral-800 lg:border-l",
-                index < 4 && "dark:border-neutral-800 lg:border-b",
-            )}>
-            {index < 4 && (
-                <div className="pointer-events-none absolute inset-0 h-full w-full bg-gradient-to-t from-white to-transparent opacity-0 transition duration-200 group-hover/feature:opacity-100 dark:from-neutral-800" />
-            )}
-            {index >= 4 && (
-                <div className="pointer-events-none absolute inset-0 h-full w-full bg-gradient-to-b from-neutral-100 to-transparent opacity-0 transition duration-200 group-hover/feature:opacity-100 dark:from-neutral-800" />
-            )}
-            <div className="relative z-10 mb-4 px-10 text-neutral-600 dark:text-neutral-400">{icon}</div>
-            <div className="relative z-10 mb-2 px-10 text-lg font-bold">
-                <div className="absolute inset-y-0 left-0 h-6 w-1 origin-center rounded-br-full rounded-tr-full bg-neutral-300 transition-all duration-200 group-hover/feature:h-8 group-hover/feature:bg-blue-500 dark:bg-neutral-700" />
-                <span className="inline-block text-neutral-800 transition duration-200 group-hover/feature:translate-x-2 dark:text-neutral-100">
-                    {title}
-                </span>
-            </div>
-            <p className="relative z-10 max-w-xs px-10 text-sm text-neutral-600 dark:text-neutral-300">{description}</p>
-        </div>
-    );
-}
+import {
+    GlowingStarsBackgroundCard,
+    GlowingStarsDescription,
+    GlowingStarsTitle,
+} from "@/components/aceternity/glowing-stars";
+import { Separator } from "@/components/ui/separator";
 
 async function SectionPaket() {
     const paket = await getAllPaket();
-
-    const paketArray = paket.map((item) => ({
-        title: item.name,
-        description: currencyFormatter(item.price),
-        icon: <Scissors />,
-    }));
+    const limitedPaket = paket.slice(0, 4);
 
     return (
-        <section id="section-paket" className="w-full py-10 opacity-90">
+        <section id="section-paket" className="w-full py-10 bg-background">
             <div className="container">
-                <h1>Paket</h1>
-                <div className="relative z-10 grid grid-cols-1 py-10 md:grid-cols-2 lg:grid-cols-4">
-                    {paketArray.map((item, index) => (
-                        <Feature key={index} {...item} index={index} />
-                    ))}
+                <div className="w-full flex flex-col gap-10">
+                    <div className="text-center leading-relaxed">
+                        <h1 className="text-3xl font-bold text-primary">Paket</h1>
+                        <h2 className="text-sm">Nikmati paket terbaru dan termurah dari kami</h2>
+                    </div>
+
+                    <div className="grid grid-cols-4 gap-10 w-full">
+                        {limitedPaket.map((item, index) => (
+                            <div key={index} className="col-span-4 md:col-span-1">
+                                <GlowingStarsBackgroundCard>
+                                    <GlowingStarsTitle>{currencyFormatter(item.price)}</GlowingStarsTitle>
+                                    <div className="flex justify-between items-end">
+                                        <GlowingStarsDescription>{item.name}</GlowingStarsDescription>
+                                        <div className="h-8 w-8 rounded-full flex items-center justify-center bg-primary">
+                                            <ArrowRight className="h-4 w-4 text-primary-foreground" />
+                                        </div>
+                                    </div>
+                                </GlowingStarsBackgroundCard>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="flex w-full items-center justify-center">
+                        <Link
+                            href="/booking"
+                            className={buttonVariants({ size: "sm", className: "inline-flex items-center gap-2" })}>
+                            <Rocket className="h-4 w-4" />
+                            <span>Booking sekarang</span>
+                        </Link>
+                    </div>
                 </div>
-                <div className="flex w-full items-center justify-center">
-                    <Link href="/booking" className={buttonVariants({ size: "sm" })}>
-                        Booking Sekarang
-                    </Link>
-                </div>
+                <Separator className="mt-16" />
             </div>
         </section>
     );

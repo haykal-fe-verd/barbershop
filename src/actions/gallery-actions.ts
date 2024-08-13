@@ -6,6 +6,17 @@ import { revalidatePath } from "next/cache";
 import prisma from "@/lib/db";
 import { gallerySchema, updateGallerySchema } from "@/lib/zod";
 
+export const getAllGallery = async () => {
+    try {
+        const galleries = await prisma.gallery.findMany({
+            orderBy: { createdAt: "desc" },
+        });
+
+        return galleries;
+    } catch (error) {
+        throw new Error("Terjadi kesalahan!");
+    }
+};
 export const getGallery = async (query: string, take: number, currentPage: number) => {
     const offset = (currentPage - 1) * take;
 

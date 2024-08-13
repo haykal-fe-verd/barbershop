@@ -50,7 +50,7 @@ export function TypewriterEffect({
                         <motion.span
                             initial={{}}
                             key={`char-${index}`}
-                            className={cn(`hidden text-black opacity-0 dark:text-white`, word.className)}>
+                            className={cn("hidden text-black opacity-0 dark:text-white", word.className)}>
                             {char}
                         </motion.span>
                     ))}
@@ -102,7 +102,7 @@ export function TypewriterEffectSmooth({
             {wordsArray.map((word, idx) => (
                 <div key={`word-${idx}`} className="inline-block">
                     {word.text.map((char, index) => (
-                        <span key={`char-${index}`} className={cn(`text-black dark:text-white`, word.className)}>
+                        <span key={`char-${index}`} className={cn("text-black dark:text-white", word.className)}>
                             {char}
                         </span>
                     ))}
@@ -113,7 +113,7 @@ export function TypewriterEffectSmooth({
     );
 
     return (
-        <div className={cn("my-6 flex space-x-1", className)}>
+        <div className={cn("flex space-x-1 items-center justify-center ", className)}>
             <motion.div
                 className="overflow-hidden pb-2"
                 initial={{
@@ -148,7 +148,7 @@ export function TypewriterEffectSmooth({
                     repeat: Infinity,
                     repeatType: "reverse",
                 }}
-                className={cn("block h-4 w-[4px] rounded-sm bg-blue-500 sm:h-6 xl:h-12", cursorClassName)}
+                className={cn("block h-4 w-[4px] rounded-sm bg-primary sm:h-6 xl:h-12", cursorClassName)}
             />
         </div>
     );
