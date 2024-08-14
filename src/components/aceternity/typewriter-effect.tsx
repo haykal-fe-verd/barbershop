@@ -128,7 +128,7 @@ export function TypewriterEffectSmooth({
                     delay: 1,
                 }}>
                 <div
-                    className="lg:text:3xl text-xs font-bold sm:text-base md:text-xl xl:text-5xl"
+                    className="text-xl md:text-5xl font-bold"
                     style={{
                         whiteSpace: "nowrap",
                     }}>

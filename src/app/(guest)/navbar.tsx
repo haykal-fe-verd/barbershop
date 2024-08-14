@@ -18,6 +18,9 @@ function Navbar() {
                         <h1 className="text-xl font-bold">Barbershop</h1>
                     </Link>
                     <nav className="md:flex w-full items-center justify-center p-4 hidden" />
+                    <Button asChild size="sm" className="md:hidden flex">
+                        <Link href="/login">Login</Link>
+                    </Button>
                     <div className="md:flex w-full items-center justify-end gap-2 hidden">
                         <ThemeColorToggle />
                         <ThemeModeToggle />
