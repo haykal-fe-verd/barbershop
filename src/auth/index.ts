@@ -12,6 +12,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(prisma),
     session: { strategy: "jwt" },
     trustHost: true,
+    cookies: {
+        pkceCodeVerifier: {
+            name: "next-auth.pkce.code_verifier",
+            options: {
+                httpOnly: true,
+                sameSite: "none",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+            },
+        },
+    },
     callbacks: {
         async signIn({ user, account }) {
             // allow without email verification
